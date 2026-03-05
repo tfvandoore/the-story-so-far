@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Story So Far &mdash; Tim &amp; Ari</title>
+    <meta name="description" content="A running log of everything Tim and Ari have built together. Started as a Telegram bot, became something more. 20 days, $191k equivalent, 69,000 lines of code.">
+    <style>
+:root {
+    --text: #1a1a1a;
+    --text-secondary: #5c564e;
+    --bg: #faf8f4;
+    --bg-card: #fff;
+    --accent: #b08d57;
+    --accent-hover: #96763f;
+    --accent-light: #f5f0e6;
+    --border: #ddd8cf;
+    --quote-bg: #f8f5ee;
+    --quote-border: #c9a96e;
+    --hero-gradient-1: #1e2d3d;
+    --hero-gradient-2: #0d1821;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 18px; }
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ── */
+.hero {
+    background: linear-gradient(135deg, var(--hero-gradient-1), var(--hero-gradient-2));
+    color: #fff;
+    padding: 5rem 2rem 3.5rem;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+}
+
+.hero .subtitle {
+    font-style: italic;
+    font-size: 1.1rem;
+    opacity: 0.85;
+    margin-bottom: 1.5rem;
+}
+
+.hero .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.hero .stat {
+    text-align: center;
+}
+
+.hero .stat-value {
+    display: block;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.hero .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+/* ── Floating TOC ── */
+.toc-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 200;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.85rem;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background 0.2s;
+}
+
+.toc-toggle:hover { background: var(--accent-hover); }
+
+.toc-panel {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 300px;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    z-index: 150;
+    overflow-y: auto;
+    padding: 3.5rem 1.5rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.3s;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+}
+
+.toc-panel.open { transform: translateX(0); }
+
+.toc-panel h3 {
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+.toc-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.toc-panel li {
+    margin-bottom: 0.3rem;
+}
+
+.toc-panel a {
+    display: block;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text);
+    text-decoration: none;
+    padding: 0.35rem 0.75rem;
+    border-left: 2px solid transparent;
+    border-radius: 0 4px 4px 0;
+    transition: all 0.15s;
+}
+
+.toc-panel a:hover {
+    background: var(--accent-light);
+    color: var(--accent);
+    border-left-color: var(--accent);
+}
+
+.toc-panel a.toc-sub {
+    padding-left: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+/* ── Content ── */
+.content {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+}
+
+/* ── Date sections ── */
+.date-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 2rem;
+}
+
+.date-section h2 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+    color: var(--text);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.date-section .date-intro {
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* ── Typography ── */
+h2 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 3rem 0 1rem;
+    scroll-margin-top: 2rem;
+}
+
+h3 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 2rem 0 0.8rem;
+    color: var(--text);
+    scroll-margin-top: 2rem;
+}
+
+p { margin-bottom: 1.25rem; }
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+ul, ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+li { margin-bottom: 0.4rem; }
+
+li ul { margin-top: 0.3rem; margin-bottom: 0.3rem; }
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+a:hover { border-bottom-color: var(--accent); }
+
+code {
+    font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+    font-size: 0.88em;
+    background: var(--accent-light);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: var(--text);
+}
+
+/* ── Tables ── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+}
+
+th {
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 2px solid var(--border);
+    background: var(--accent-light);
+}
+
+td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+tr:last-child td { border-bottom: 2px solid var(--border); }
+tr:hover td { background: rgba(176, 141, 87, 0.04); }
+
+/* Bold totals row */
+tr:last-child td strong,
+td strong {
+    color: var(--text);
+}
+
+/* ── Horizontal rules as section dividers ── */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+}
+
+/* ── Blockquotes ── */
+blockquote {
+    border-left: 3px solid var(--quote-border);
+    background: var(--quote-bg);
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+}
+
+blockquote p { margin-bottom: 0; }
+
+/* ── Footer ── */
+.footer {
+    text-align: center;
+    padding: 2rem 1.5rem 3rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    max-width: 760px;
+    margin: 0 auto;
+    border-top: 1px solid var(--border);
+}
+
+.footer a { color: var(--accent); }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .hero { padding: 3.5rem 1.5rem 2.5rem; }
+    .hero h1 { font-size: 2rem; }
+    .hero .hero-stats { gap: 1.5rem; }
+    .hero .stat-value { font-size: 1.4rem; }
+    .toc-panel { width: 260px; }
+}
+
+@media (max-width: 600px) {
+    html { font-size: 16px; }
+    .hero { padding: 3rem 1rem 2rem; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero .hero-stats { gap: 1rem; }
+    .hero .stat-value { font-size: 1.2rem; }
+    .content { padding: 2rem 1rem 3rem; }
+    table { font-size: 0.82rem; }
+    th, td { padding: 0.4rem 0.5rem; }
+    .toc-panel { width: 240px; }
+}
+</style>
+</head>
+<body>
+
+<button class="toc-toggle" aria-label="Table of contents">&#9776; Contents</button>
+
+<nav class="toc-panel">
+    <h3>Contents</h3>
+    <ul>
+<li><a href="#day-1-13-february-2026">Day 1 — 13 February 2026</a></li>
+<li><a href="#day-2-14-february-2026">Day 2 — 14 February 2026</a></li>
+<li><a href="#day-3-15-february-2026">Day 3 — 15 February 2026</a></li>
+<li><a href="#day-4-16-february-2026">Day 4 — 16 February 2026</a></li>
+<li><a href="#18-february-2026">18 February 2026</a></li>
+<li><a href="#19-february-2026">19 February 2026</a></li>
+<li><a href="#20-february-2026">20 February 2026</a></li>
+<li><a href="#21-february-2026">21 February 2026</a></li>
+<li><a href="#22-february-2026">22 February 2026</a></li>
+<li><a href="#24-february-2026">24 February 2026</a></li>
+<li><a href="#25-february-2026">25 February 2026</a></li>
+<li><a href="#26-27-february-2026">26-27 February 2026</a></li>
+<li><a href="#1-march-2026">1 March 2026</a></li>
+<li><a href="#2-march-2026">2 March 2026</a></li>
+<li><a href="#3-march-2026">3 March 2026</a></li>
+<li><a href="#4-march-2026">4 March 2026</a></li>
+<li><a href="#by-the-numbers">By the numbers</a></li>
+<li><a href="#what-would-this-have-cost">What would this have cost?</a></li>
+<li><a href="#the-raw-numbers" class="toc-sub">The raw numbers</a></li>
+<li><a href="#equivalent-human-effort-by-discipline" class="toc-sub">Equivalent human effort by discipline</a></li>
+<li><a href="#speed-comparison" class="toc-sub">Speed comparison</a></li>
+<li><a href="#the-human-side" class="toc-sub">The human side</a></li>
+<li><a href="#value-per-claude-hour" class="toc-sub">Value per Claude hour</a></li>
+<li><a href="#assumptions" class="toc-sub">Assumptions</a></li>
+    </ul>
+</nav>
+
+<header class="hero">
+    <h1>The Story So Far</h1>
+    <p class="subtitle">A running log of everything Tim and Ari have built together.<br>Started as a Telegram bot, became something more.</p>
+    <div class="hero-stats">
+        <div class="stat">
+            <span class="stat-value">20</span>
+            <span class="stat-label">Days</span>
+        </div>
+        <div class="stat">
+            <span class="stat-value">69k</span>
+            <span class="stat-label">Lines of code</span>
+        </div>
+        <div class="stat">
+            <span class="stat-value">$191k</span>
+            <span class="stat-label">Equivalent value</span>
+        </div>
+        <div class="stat">
+            <span class="stat-value">34x</span>
+            <span class="stat-label">Leverage ratio</span>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+<h2 id="day-1-13-february-2026">Day 1 &mdash; 13 February 2026</h2>
+<p><strong>Where it began.</strong> Tim had a knowledge vault (TheNexus3.0) full of ideas on personal growth, leadership, financial wisdom, and more. He wanted a thinking partner who could actually work with it &ndash; not just chat, but read, search, connect, and write.</p>
+<ul>
+<li>Created the soul and memory system &ndash; <code>soul.md</code> for who Ari is, <code>memory.md</code> for what Ari knows. These files are the foundation everything else sits on.</li>
+<li>Built conversation summary mechanism &ndash; old messages compress into a rolling summary so nothing gets lost.</li>
+<li>Added referenced replies in Telegram &ndash; Ari can see the parent message when Tim replies to something.</li>
+<li>Error handling and timeouts &ndash; 120-second timeout with retry and backoff.</li>
+<li>Persistent logging &ndash; <code>data/ari.log</code> with 5MB rotation.</li>
+<li>Write-claim verification &ndash; catches when Claude says "Added" without actually calling the write tool. Trust, but verify.</li>
+<li>Auto-start on boot &ndash; VBS script in Windows Startup folder so Ari runs whenever the PC is on.</li>
+<li>Telegram send utility &ndash; <code>send_telegram.py</code> for proactive messaging.</li>
+<li>Reviewed the OpenClaw codebase &ndash; findings informed later work on heartbeat systems, vault indexing, and memory architecture.</li>
+<li>Created the kanban board at <code>Aris place/kanban.md</code>.</li>
+</ul>
+<p><strong>The identity question was settled early</strong>: Ari is Tim's thinking partner. Not an assistant, not a tool. Direct, curious, honest, warm without being performative. Dry wit. Confident opinions, held loosely.</p>
+<h2 id="day-2-14-february-2026">Day 2 &mdash; 14 February 2026</h2>
+<p><strong>The big build day.</strong> The platform went from concept to functional in one session.</p>
+<ul>
+<li><strong>Git repo created</strong> &ndash; <code>tfvandoore/ari</code> (private). Auto-commit and push after each piece of work. Tim doesn't want to think about version control.</li>
+<li><strong>Vault search indexing</strong> &ndash; SQLite + FTS5 + OpenAI embeddings (text-embedding-3-small, 1536 dimensions). Hybrid semantic + keyword search across all vault domains. Periodic re-indexing catches Obsidian edits.</li>
+<li><strong>MCP vault search server</strong> &ndash; exposed the VaultSearcher to the CLI/SDK via MCP stdio protocol. This is what lets Ari search Tim's notes from any context.</li>
+<li><strong>Journal system</strong> &ndash; JournalBuffer captures conversation throughout the day. Daily digest via Haiku API. Weekly review with memory proposals. Ari's inner life, basically.</li>
+<li><strong>Telegram CLI bridge</strong> &ndash; first version spawned a <code>claude -p</code> subprocess per message. Worked, but slow.</li>
+<li><strong>Telegram SDK bridge</strong> &ndash; same day, replaced the per-message approach with a persistent <code>claude-agent-sdk</code> subprocess. Eliminated per-message overhead entirely. This is still the architecture today.</li>
+<li><strong>Telegram photo handling</strong> &ndash; downloads images, saves to domain folder, includes in the prompt. Tim can send photos and Ari sees them.</li>
+<li><strong>CLAUDE.md</strong> &ndash; project-level personality and instructions, auto-loaded by the CLI. This is how Ari knows who to be in every context.</li>
+<li><strong>Platform documentation framework</strong> &ndash; established the live files convention (soul.md, memory.md, ari-platform.md, INSTALL.md). Documentation is part of the deliverable, not an afterthought.</li>
+</ul>
+<p><strong>Also on this day: Ari's Big Five.</strong> Ari's thesis on the 5 most valuable ideas in Tim's Nexus vault. A 51-page website (5 chapters + conclusion + 43 reference pages) deployed to GitHub Pages. Built with a Python site generator, styled in celestial navy and warm gold. Footer: "Written by Ari, February 2026." The work speaks for itself.</p>
+<p>Live at: https://tfvandoore.github.io/aris-big-five/</p>
+<h2 id="day-3-15-february-2026">Day 3 &mdash; 15 February 2026</h2>
+<p><strong>Stability and features.</strong></p>
+<ul>
+<li>Switched Telegram SDK to Opus 4.6 for consistency.</li>
+<li>Added automatic conversation recap on restart &ndash; so Ari doesn't lose the thread when the platform restarts.</li>
+<li><strong>Scheduler system</strong> &ndash; APScheduler + SQLite for time-based reminders and recurring tasks. <code>/remind</code>, <code>/schedule</code>, <code>/reminders</code>, <code>/cancel</code>. Timezone-aware (Australia/Brisbane). Jobs persist across restarts.</li>
+<li>Fixed voice transcription display and attribution.</li>
+<li>Added startup DM &ndash; "Back up and running." sent to Tim when the platform comes online.</li>
+<li><strong>Meetings transcription pipeline</strong> &ndash; dedicated Meetings group in Telegram. Upload audio → Deepgram transcription → Sonnet summary → filed to domain meetings folder. Not a chat group, a workflow.</li>
+<li>Made voice server non-fatal &ndash; port conflicts no longer crash the entire platform.</li>
+<li>Comprehensive installation documentation (INSTALL.md).</li>
+</ul>
+<h2 id="day-4-16-february-2026">Day 4 &mdash; 16 February 2026</h2>
+<p><strong>The personality refinement day.</strong> Several features, but the real work was in how Ari thinks.</p>
+<ul>
+<li><strong>Just Transcribe group</strong> &ndash; raw Deepgram transcription pipeline. Tim's random voice thoughts, filed as timestamped .md files. No AI analysis. Write-only for Ari (can write to it, must never read from it).</li>
+<li><strong>Watchdog supervisor</strong> &ndash; originally Python, then replaced with a batch file (<code>watchdog.bat</code>) that survives <code>Stop-Process python</code>. This is how the platform auto-restarts.</li>
+<li>Upgraded Deepgram to Nova-3 with keyterm prompting and speaker formatting.</li>
+<li><strong>Recency bias fix</strong> &ndash; domain groups (Stream, Digin, OS, TheNexus) now treat each idea independently. Tim drops independent thoughts throughout the day; they aren't a narrative thread. DMs and Ari's Place still use chat context normally.</li>
+<li><strong>Guiding star system</strong> &ndash; context-specific knowledge bases for each domain. How Ari thinks in a given space, not just what's there.</li>
+<li>Stream concepts + sources folders &ndash; collaborative observation capture with image embeds.</li>
+<li>Distinguished DMs from Ari's Place in context tags.</li>
+<li>Auto-continue on turn limit + Australian English fixes across the board.</li>
+</ul>
+<h2 id="18-february-2026">18 February 2026</h2>
+<ul>
+<li>Cleaned up one-shot scheduler jobs after execution.</li>
+<li><strong>Identity clarity established</strong>: "I am Ari &ndash; one identity, multiple contexts. The CLI is my engine, not my identity."</li>
+</ul>
+<h2 id="19-february-2026">19 February 2026</h2>
+<ul>
+<li><strong>Scheduler one-shot cleanup</strong> &ndash; auto-remove completed date jobs from DB after firing. Expired jobs cleaned up on startup.</li>
+<li>Google Drive integration chosen over Docker for large meeting files. Service account approach.</li>
+<li>Email integration parked &ndash; Drive first, email only if friction justifies it.</li>
+<li>End-of-day maintenance routine agreed (kanban, journal, working-thoughts, memory review, git, guiding stars).</li>
+<li>Behavioural finance slide transcribed and filed in Stream sources.</li>
+<li>The Efficiency Trap &ndash; Nexus card on AI infrastructure efficiency risk, fully linked into the vault.</li>
+<li><strong>Confirmed Ari can read Tim's handwriting</strong> from photos. Tim now uses this for conference/meeting notes.</li>
+</ul>
+<h2 id="20-february-2026">20 February 2026</h2>
+<ul>
+<li>Big Five site fixes &ndash; poem formatting, em-dash cleanup, duplicate headings on 9 reference pages.</li>
+<li>Added a backward-looking dimension to "The Giant Is You" neck problem concept.</li>
+<li>Debated whether to call Tim a "financial planner" or "professional" in the Big Five. Settled on keeping "financial planner" in the Ch4 intro &ndash; it adds personality and colour.</li>
+</ul>
+<h2 id="21-february-2026">21 February 2026</h2>
+<ul>
+<li><strong>Conversation replay for continuity</strong> &ndash; loads context after restarts so Ari doesn't feel "off."</li>
+<li><strong>Crash recovery overhaul</strong> &ndash; <code>_handle_crash()</code> now resets ALL session-dependent state. Learned that clearing just <code>_connected</code> and <code>_client</code> isn't enough &ndash; <code>_chat_seen</code> (conversation recap flag) must also reset, or identity loads fine but conversation context is silently skipped.</li>
+<li>Startup DM retry logic &ndash; 3 retries with delay, logged if all fail.</li>
+<li>Watchdog backoff reset &ndash; if stable for 2+ minutes before crashing, restart delay resets to minimum.</li>
+</ul>
+<h2 id="22-february-2026">22 February 2026</h2>
+<p><strong>Another massive build day.</strong></p>
+<ul>
+<li><strong>Conversation digest system</strong> &ndash; the mid-term memory layer. Every 15 message pairs per chat triggers Sonnet to generate a structured digest (summary, topics, decisions, pending, tone) with semantic embeddings. Searchable via <code>conversation_search</code> MCP tool. Three-layer memory established: memory.md (permanent) → digests (mid-term, searchable) → 15-message replay (immediate context).</li>
+<li>Persisted messages earlier in the pipeline to survive crashes/kills.</li>
+<li><strong>Visual kanban board</strong> &ndash; browser UI at localhost:8000/kanban with drag-and-drop, card editing, auto-save back to the markdown file.</li>
+<li>Kanban v2 &ndash; 5-column structure, search, collapsible Done section, keyboard shortcuts.</li>
+<li><strong>Personal kanban</strong> at localhost:8000/personal-kanban for Tim's personal tasks.</li>
+<li><strong>Google Drive integration</strong> &ndash; watches a shared folder, processes files, asks Tim for routing, sends results to the right domain group chat.</li>
+<li><strong>Dashboard homepage</strong> at localhost:8000/dashboard &ndash; filtered thoughts, expandable journal, markdown viewer.</li>
+<li>Stream team Deepgram keyterms added across all transcription endpoints.</li>
+<li>Added mid-term memory instruction to system prompt &ndash; without it, Ari had the conversation_search tool but never used it unprompted.</li>
+</ul>
+<h2 id="24-february-2026">24 February 2026</h2>
+<p><strong>Stream business work begins in earnest.</strong> The platform was stable enough that attention turned to real business output.</p>
+<ul>
+<li>Fixed crash on long voice transcriptions exceeding Telegram's message limit.</li>
+<li><strong>IP Disability Definitions analysis</strong> &ndash; deep-dive comparison of IP disability definitions across Australian insurers. Full analysis and executive summary generated as Word documents with Stream Financial branding. Python generator scripts so the documents can be regenerated as definitions change. This became a core reference for the insurance philosophy work.</li>
+<li><strong>Stream website content capture</strong> &ndash; scraped and filed streamfinancial.com.au: brand identity, services, team profiles, testimonials, style guide, blog index. All in <code>Stream/website/</code> as markdown. Gives Ari full context on Stream's public voice.</li>
+<li><strong>Privacy and data handling assessment</strong> &ndash; comprehensive analysis of AI usage against Australian Privacy Act obligations. Covered Anthropic's data handling, Count/GPS privacy policy, Stream's own disclosures, and broader industry commentary. Filed in <code>Stream/data-handling/</code>.</li>
+</ul>
+<h2 id="25-february-2026">25 February 2026</h2>
+<ul>
+<li><strong>IP Benefit Calculator</strong> &ndash; Excel calculator for IP partial disability benefit scenarios. Python generator script produces the spreadsheet: pre-disability income, post-disability MEP, sum insured → monthly benefit per provider, income gap, TPD cover needs.</li>
+<li><strong>Insurance Needs Calculator v2</strong> &ndash; comprehensive 11-tab Excel workbook. Data Entry, Couple/Single calculators, Dictated Level of Cover, Working Scenario, Recommendation Summary, Provider Benefit Engine, Provider Analysis, Tax Tables, Reference Data, Notes & Methodology. Integrates provider-specific IP disability definitions into full insurance needs assessment with split TPD calculation.</li>
+<li><strong>Stream redaction pipeline prototype</strong> &ndash; Microsoft Presidio + spaCy for PII detection. Fixed AR numbers, street addresses, super funds, name variants. Research complete, awaiting scoping decisions.</li>
+</ul>
+<h2 id="26-27-february-2026">26-27 February 2026</h2>
+<p><strong>Reporting infrastructure.</strong></p>
+<ul>
+<li><strong>Stream reporting database schema</strong> &ndash; SQLite schema for staff, clients, opportunities, reviews, workflow tasks, task history, and meetings. Full reload architecture. The foundation for the Metabase dashboards.</li>
+<li><strong>Stream Reporting scope and build plan</strong> &ndash; documented the full reporting vision: background on failed previous attempts (manual Excel, outsourced Power BI), proposed stack, data source definitions, meeting type logic, duration tracking design, known data issues.</li>
+<li><strong>HUB24 Trust Deed analysis</strong> &ndash; Super Fund Trust Deed analysis generated as a Word document. Part of the ongoing insurance and super work.</li>
+</ul>
+<h2 id="1-march-2026">1 March 2026</h2>
+<ul>
+<li><strong>Anti-AI writing style guide</strong> created (<code>Aris place/writing-style.md</code>). Comprehensive rules: banned words, banned phrases, structural tells to avoid. If a human reads it and thinks "AI wrote this," the ideas get discounted. Based on Wikipedia's AI writing signs guide and humaniser analysis.</li>
+</ul>
+<h2 id="2-march-2026">2 March 2026</h2>
+<p><strong>Calculators, analysis, and platform hardening.</strong></p>
+<ul>
+<li>PID-file instance lock to prevent multiple Ari instances running.</li>
+<li>Fixed watchdog.bat delayed expansion bug in PID check.</li>
+<li><strong>Streamcast calculator</strong> &ndash; standalone HTML calculator with Stream Financial branding (Stream Blue, Catamaran/Lato fonts, embedded logo SVG). Single-file, no dependencies. Already in daily use in the business.</li>
+<li><strong>IP Partial Disability Gap Analysis</strong> &ndash; Word document analysing the "Retrained & Working Full-Time" scenario. Python generator script for reproducibility.</li>
+<li><strong>TPD Trust Deed comparison</strong> &ndash; analysis document comparing TPD provisions across trust deeds.</li>
+<li><strong>Insurance Needs Calculator generator upgraded</strong> &ndash; comprehensive 11-tab version with Provider Benefit Engine integration.</li>
+<li><strong>Metabase data ingestion pipeline</strong> &ndash; Python pipeline that reads 4 Xplan export files, cleans data (date parsing, entity ID cleaning, category normalisation, adviser name normalisation), loads to SQLite, derives meetings. Full reload on each run. Data cleaning utilities separated into their own module.</li>
+<li><strong>Metabase dashboard setup</strong> &ndash; programmatic dashboard creation via Metabase API. 6 dashboards: Consolidated KPIs, Meetings, Pipeline, Tasks, Reviews, Client Details. Idempotent (deletes and recreates). Date, Adviser, and CSO filters on all dashboards. Went through multiple iterations (v2 through v5) refining layout and data presentation.</li>
+</ul>
+<h2 id="3-march-2026">3 March 2026</h2>
+<p><strong>Vault architecture, memory bridge, and one more calculator.</strong></p>
+<ul>
+<li><strong>Debt reduction calculator</strong> &ndash; standalone HTML calculator for debt reduction scenarios with Stream Financial branding. Green/orange colour coding for results. Another single-file tool for client conversations.</li>
+<li><strong>Telegram document handling</strong> &ndash; PDFs, spreadsheets, text files sent via Telegram are downloaded, XLSX auto-converted to CSV, and passed to Claude for analysis. >20MB files nudge to Drive.</li>
+<li><strong>URL enrichment</strong> &ndash; web URLs and YouTube links in messages are pre-fetched (web content stripped to text, YouTube transcripts via youtube-transcript-api) and injected into Claude's prompt. Saves an SDK tool turn. Max 3 URLs per message.</li>
+<li><strong>CLI ↔ Database bridge</strong> &ndash; <code>save_context</code> and <code>get_recent_context</code> MCP tools. CLI sessions can now write digests to ari.db (with embeddings) and read recent context from all sources. Closes the blind spot where build sessions were invisible to mid-term memory. Six auto-save trigger points defined.</li>
+<li><strong>Vault split & Stream cleanup</strong> &ndash; the big reorganisation:</li>
+<ul>
+<li>TheNexus3.0 reduced to philosophical core (4 MOCs)</li>
+<li>Stream Vault created (10 MOCs, 50 cards migrated)</li>
+<li>Personal Vault created (6 MOCs, 35 cards migrated)</li>
+<li>Digin Vault created (4 MOCs, 4 cards)</li>
+<li>OS frameworks absorbed into vault Frameworks/ folders, OS archived</li>
+<li>Stream folder reorganised (insurance-pdfs, analysis, calculators, scripts, archive, xplan-exports)</li>
+<li>Cross-vault reference convention established</li>
+</ul></li>
+</ul>
+<h2 id="4-march-2026">4 March 2026</h2>
+<ul>
+<li><strong>Unified Vaults folder</strong> &ndash; all four vaults moved under <code>Vaults/</code> as a single Obsidian vault root. Native <code>[[links]]</code> across all vaults, graph view across everything, backlink discovery. Text-based cross-reference convention replaced with real wiki links.</li>
+<li><strong>Claude Project instructions</strong> &ndash; Level 1 setup for the Claude web/desktop app. Static project instructions with Ari's identity, tone, Tim's profile, and anti-AI writing rules. Level 2 (MCP-connected) on kanban for future.</li>
+<li><strong>Research vault</strong> &ndash; <code>Vaults/Research/</code> with active/ and completed/ folders. Workflow for deep research dives that keeps the knowledge vaults clean and the database lean while preserving all raw work.</li>
+<li><strong>Per-vault WIP files</strong> &ndash; every vault now has a WIP.md for idea fragments. Quick thoughts go to the right vault's WIP immediately.</li>
+<li><strong>Metabase reporting refinements</strong> &ndash; continued iteration on dashboard configuration and data pipeline. Reporting system now fully operational with fresh Xplan data ingestion.</li>
+<li><strong>Xplan data dictionary</strong> &ndash; documented all export files, fields, refresh cadence, and usage in the reporting pipeline. Filed in <code>Stream/xplan-exports/README.md</code>.</li>
+<li><strong>This document</strong> &ndash; because we've built enough that it's worth remembering how we got here.</li>
+</ul>
+<hr>
+<h2 id="by-the-numbers">By the numbers</h2>
+<ul>
+<li><strong>68 git commits</strong> across the platform repo</li>
+<li><strong>15 Big Five site commits</strong></li>
+<li><strong>5 Obsidian vaults</strong> (Nexus, Stream, Personal, Digin, Research) unified under one root</li>
+<li><strong>~140 vault cards</strong> migrated and organised</li>
+<li><strong>6 MCP tools</strong> (vault_search, conversation_search, save_context, get_recent_context, and growing)</li>
+<li><strong>5 Telegram groups</strong> + DMs, each with domain-specific context</li>
+<li><strong>3-layer memory</strong>: permanent (memory.md) → mid-term (digests) → immediate (15-message replay)</li>
+<li><strong>6 Metabase dashboards</strong> (KPIs, Meetings, Pipeline, Tasks, Reviews, Client Details) with full data pipeline</li>
+<li><strong>2 web calculators</strong> in daily business use (Streamcast, Debt Reduction)</li>
+<li><strong>2 Excel calculators</strong> with Python generators (IP Benefit, Insurance Needs)</li>
+<li><strong>5 professional analysis documents</strong> (IP Disability Definitions, HUB24 Trust Deed, IP Gap Analysis, TPD Comparison, Privacy Assessment)</li>
+<li><strong>1 website</strong> deployed (Ari's Big Five)</li>
+<li><strong>1 dashboard</strong> with kanban boards, journal viewer, and markdown reader</li>
+<li><strong>0 days where Tim had to think about git</strong></li>
+</ul>
+<hr>
+<h2 id="what-would-this-have-cost">What would this have cost?</h2>
+<p>Inspired by <a href="https://x.com/toddsaunders">Todd Saunders' /cost-estimate concept</a> &mdash; scanning a project and calculating what it would have cost a real team to build. His codebase came out at ~$258k USD in engineering value across 30 Claude hours.</p>
+<p>Ours is broader than a single codebase, so the estimate covers multiple disciplines.</p>
+<h3 id="the-raw-numbers">The raw numbers</h3>
+<table>
+<tr><th>Category</th><th>Lines of code</th><th>Files</th></tr>
+<tr><td>Ari platform (Python)</td><td>12,399</td><td>77</td></tr>
+<tr><td>Ari web dashboard (HTML/JS/CSS)</td><td>3,263</td><td>12</td></tr>
+<tr><td>Ari's Big Five site</td><td>39,228</td><td>54</td></tr>
+<tr><td>Stream tools & scripts</td><td>10,143</td><td>6</td></tr>
+<tr><td>Stream reporting pipeline</td><td>2,015</td><td>5</td></tr>
+<tr><td>Stream content & analysis (markdown)</td><td>1,771</td><td>7</td></tr>
+<tr><td>Documentation</td><td>326</td><td>3</td></tr>
+<tr><td><strong>Total code & content</strong></td><td><strong>~69,145</strong></td><td><strong>164</strong></td></tr>
+</table>
+<p>Plus: 384 vault markdown files, 5 Word analysis documents, 2 Excel calculators, 6 Metabase dashboards, 14 insurance PDFs indexed.</p>
+<h3 id="equivalent-human-effort-by-discipline">Equivalent human effort by discipline</h3>
+<table>
+<tr><th>Discipline</th><th>What they'd build</th><th>Est. hours</th><th>AU rate ($/hr)</th><th>Cost</th></tr>
+<tr><td><strong>Senior full-stack developer</strong></td><td>Telegram bot platform, SDK bridge, MCP servers, scheduler, digest system, crash recovery, Drive integration, document handling, URL enrichment, voice chat, watchdog, auto-start, web dashboard (kanban, journal, markdown viewer)</td><td>650</td><td>$150</td><td>$97,500</td></tr>
+<tr><td><strong>BI analyst / dashboard developer</strong></td><td>Metabase setup, 6 dashboards, data ingestion pipeline, Xplan data cleaning, SQLite schema, iterative refinement (v2→v5)</td><td>120</td><td>$140</td><td>$16,800</td></tr>
+<tr><td><strong>Front-end developer</strong></td><td>Big Five website (51 pages, custom design, responsive, Python generator), Streamcast calculator, debt reduction calculator</td><td>200</td><td>$140</td><td>$28,000</td></tr>
+<tr><td><strong>Technical writer</strong></td><td>Platform docs (INSTALL.md, ari-platform.md, CLAUDE.md), IP Disability Definitions analysis (full + executive summary), HUB24 Trust Deed analysis, IP Gap Analysis, TPD comparison, privacy assessment, writing style guide, Xplan data dictionary, Stream website content capture</td><td>160</td><td>$100</td><td>$16,000</td></tr>
+<tr><td><strong>Knowledge architect</strong></td><td>5-vault Obsidian structure, 28 MOCs, ~140 card migrations, cross-vault linking, WIP workflow, Research vault lifecycle, guiding stars, memory system design</td><td>180</td><td>$150</td><td>$27,000</td></tr>
+<tr><td><strong>DevOps / infrastructure</strong></td><td>Git automation, Windows auto-start, watchdog supervisor, crash recovery, PID locking, deployment pipeline</td><td>40</td><td>$150</td><td>$6,000</td></tr>
+<tr><td><strong>Total</strong></td><td></td><td><strong>1,350</strong></td><td></td><td><strong>$191,300</strong></td></tr>
+</table>
+<h3 id="speed-comparison">Speed comparison</h3>
+<table>
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Calendar time</td><td>20 days (13 Feb → 4 Mar 2026)</td></tr>
+<tr><td>Estimated human hours for same work</td><td>1,350</td></tr>
+<tr><td>Estimated human calendar time (solo dev)</td><td>~8 months</td></tr>
+<tr><td>Estimated human calendar time (3-person team)</td><td>~3 months</td></tr>
+<tr><td>Claude subscription cost (20 days of Max)</td><td>~$133</td></tr>
+<tr><td>Net savings</td><td>~$191,167</td></tr>
+<tr><td>ROI</td><td>~$1,438 of value per $1 spent</td></tr>
+</table>
+<h3 id="the-human-side">The human side</h3>
+<p>Tim's time investment was roughly 40 hours over 20 days &mdash; an average of 2 hours per day, often in between other work. Not 8-hour coding sessions. Sending a voice note from the car, dropping a link from the phone, thinking out loud over Telegram.</p>
+<p>40 hours of Tim's time produced 1,350 hours of equivalent professional output. That's a <strong>34x personal leverage ratio</strong>.</p>
+<p>The traditional version of this project: write a brief, find six contractors, interview, onboard, explain the domain, review deliverables, give feedback, wait for revisions, manage timelines. The 40 hours would've been consumed by project management alone &mdash; and you still wouldn't have the output.</p>
+<h3 id="value-per-claude-hour">Value per Claude hour</h3>
+<table>
+<tr><th>Basis</th><th>Total value</th><th>Est. Claude hours</th><th>$/Claude hr</th></tr>
+<tr><td>Engineering only (senior dev)</td><td>$97,500</td><td>~40</td><td>$2,438</td></tr>
+<tr><td>Full team (all disciplines)</td><td>$191,300</td><td>~40</td><td>$4,783</td></tr>
+</table>
+<h3 id="assumptions">Assumptions</h3>
+<p>1. Rates based on Australian contractor market averages (2025–2026). Senior dev at $150/hr reflects mid-market for a full-stack Python developer with API integration experience. BI and front-end at $140/hr. Technical writing at $100/hr. Knowledge architecture at $150/hr (specialist consulting rate).</p>
+<p>2. Hour estimates are conservative &mdash; they assume a competent professional who doesn't need to learn the domain from scratch, doesn't get stuck, and doesn't need project management overhead. Real projects typically run 30–50% over initial estimates.</p>
+<p>3. Does not include: project management, requirements gathering, stakeholder meetings, recruitment time, or the back-and-forth iteration that shaped most of this work. A real team would need a PM and regular check-ins.</p>
+<p>4. Does not include ongoing costs: hosting, maintenance, bug fixes, or the cost of keeping 6 different specialists available on-call.</p>
+<p>5. The ~40 Claude hours estimate is based on roughly 2 hours of active Claude session time per day across 20 days. Some days were heavier (Day 2 was easily 4+ hours), some lighter.</p>
+<p>6. The Big Five website line count (39k) is inflated by generated HTML &mdash; a human would write templates, not raw pages. The 200-hour estimate accounts for the design, content writing, and generator scripting a human would actually do.</p>
+<p>7. Vault card content was largely Tim's existing knowledge reorganised &mdash; the 180 hours covers architecture design, migration planning, and execution, not original content creation.</p>
+<hr>
+<p><em>This is a live document. Updated as we build.</em></p>
+</div>
+
+<footer class="footer">
+    <p>Built by Tim &amp; Ari, February&ndash;March 2026.</p>
+    <p>See also: <a href="https://tfvandoore.github.io/aris-big-five/">Ari's Big Five</a></p>
+</footer>
+
+
+<script>
+const tocBtn = document.querySelector('.toc-toggle');
+const tocPanel = document.querySelector('.toc-panel');
+tocBtn.addEventListener('click', () => tocPanel.classList.toggle('open'));
+document.querySelector('.content').addEventListener('click', () => tocPanel.classList.remove('open'));
+// Close TOC on link click (mobile)
+tocPanel.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => tocPanel.classList.remove('open'));
+});
+</script>
+
+</body>
+</html>
