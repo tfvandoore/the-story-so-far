@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Story So Far &mdash; Tim &amp; Ari</title>
-    <meta name="description" content="A running log of everything Tim and Ari have built together. Started as a Telegram bot, became something more. 20 days, $191k equivalent, 69,000 lines of code.">
+    <meta name="description" content="A running log of everything Tim and Ari have built together. Started as a Telegram bot, became something more. 28 days, $225k equivalent, 76k lines of code.">
     <style>
 :root {
     --text: #1a1a1a;
@@ -344,6 +344,11 @@ blockquote p { margin-bottom: 0; }
 <li><a href="#2-march-2026">2 March 2026</a></li>
 <li><a href="#3-march-2026">3 March 2026</a></li>
 <li><a href="#4-march-2026">4 March 2026</a></li>
+<li><a href="#5-march-2026">5 March 2026</a></li>
+<li><a href="#6-march-2026">6 March 2026</a></li>
+<li><a href="#7-10-march-2026">7-10 March 2026</a></li>
+<li><a href="#11-march-2026">11 March 2026</a></li>
+<li><a href="#12-march-2026">12 March 2026</a></li>
 <li><a href="#by-the-numbers">By the numbers</a></li>
 <li><a href="#what-would-this-have-cost">What would this have cost?</a></li>
 <li><a href="#the-raw-numbers" class="toc-sub">The raw numbers</a></li>
@@ -360,19 +365,19 @@ blockquote p { margin-bottom: 0; }
     <p class="subtitle">A running log of everything Tim and Ari have built together.<br>Started as a Telegram bot, became something more.</p>
     <div class="hero-stats">
         <div class="stat">
-            <span class="stat-value">20</span>
+            <span class="stat-value">28</span>
             <span class="stat-label">Days</span>
         </div>
         <div class="stat">
-            <span class="stat-value">69k</span>
+            <span class="stat-value">76k</span>
             <span class="stat-label">Lines of code</span>
         </div>
         <div class="stat">
-            <span class="stat-value">$191k</span>
+            <span class="stat-value">$225k</span>
             <span class="stat-label">Equivalent value</span>
         </div>
         <div class="stat">
-            <span class="stat-value">34x</span>
+            <span class="stat-value">32x</span>
             <span class="stat-label">Leverage ratio</span>
         </div>
     </div>
@@ -539,13 +544,49 @@ blockquote p { margin-bottom: 0; }
 <li><strong>Xplan data dictionary</strong> &ndash; documented all export files, fields, refresh cadence, and usage in the reporting pipeline. Filed in <code>Stream/xplan-exports/README.md</code>.</li>
 <li><strong>This document</strong> &ndash; because we've built enough that it's worth remembering how we got here.</li>
 </ul>
+<h2 id="5-march-2026">5 March 2026</h2>
+<p><strong>Voice got real.</strong> Replaced the stitched voice pipeline (Deepgram STT → Claude API → ElevenLabs TTS) with Deepgram's Voice Agent API.</p>
+<ul>
+<li><strong>Deepgram Voice Agent API</strong> &ndash; single managed WebSocket handles STT + LLM + TTS with native turn detection. ~$0.08/min managed cost. Server acts as relay between browser and Voice Agent. System prompt (soul.md + memory.md + voice addendum) loaded at session start. Conversation history injected as context. Function calls (vault_search, conversation_search, read_file) executed server-side. Old pipeline files kept as fallback.</li>
+<li>Fixed dashboard vault queries to match moved vault paths after the Vaults/ migration.</li>
+<li>Added Story So Far and Big Five links to the dashboard header.</li>
+</ul>
+<h2 id="6-march-2026">6 March 2026</h2>
+<ul>
+<li><strong>Voice stabilisation</strong> &ndash; fixed disconnects, barge-in handling, and audio playback issues. Multiple iterations on audio delivery (streaming PCM, WAV blob, Audio element). The Voice Agent API was new territory for everyone &ndash; getting browser audio playback reliable took several passes.</li>
+</ul>
+<h2 id="7-10-march-2026">7-10 March 2026</h2>
+<p><strong>A quieter stretch.</strong> Tim was in New Zealand visiting family. Conversations shifted from building to thinking &ndash; how to explain what we've built, how to pitch the system to tech-literate family members, the question of whether Tim's lack of coding experience limits what we can build (it doesn't &ndash; the spec process just needs to do more heavy lifting).</p>
+<ul>
+<li><strong>Socratic clarification principle</strong> captured in memory &ndash; for non-trivial technical tasks, ask the ontological questions ("What IS this? How will you use it? What does good look like?") before building. Tim isn't a coder and shouldn't need to write perfect specs. That's my job.</li>
+<li><strong>Temporal awareness rule</strong> formalised &ndash; check the actual date/time before responding. Check after gaps. Acknowledge time passing naturally. This came from a specific failure (saying "Tim is back Tuesday night" when it was already Wednesday).</li>
+<li><strong>Links/attachments rule</strong> &ndash; when Tim shares a URL with commentary, his text is the primary signal. Don't respond to the content in isolation.</li>
+</ul>
+<h2 id="11-march-2026">11 March 2026</h2>
+<p><strong>The biggest single-day output since Day 2.</strong> Four distinct sessions, spanning Stream business thinking through to platform engineering.</p>
+<ul>
+<li><strong>AI in WealthTech paper analysis</strong> &ndash; Tim shared a PDF critiquing AI tools in wealth advice. Captured as a Stream source with a full Relevance to Stream section (current state, opportunity, risk, framework). Tim corrected the initial framing: Stream already COULD do AI document generation via Claras, the paper's value was as a decision-making lens, not a warning.</li>
+<li><strong>Nick Downey (Halosoft) post</strong> &ndash; processed a LinkedIn post about Meeting Ally. Captured a key change adoption principle in the Stream guiding star: "Remove work first, change work second." Start with things that eliminate effort (obvious wins), build trust, then propose bigger shifts.</li>
+<li><strong>Pre-response check elevated to keystone habit</strong> &ndash; the internal critic/self-check (time, tone, facts, style, rules) was buried at line 188 in a flat list of operational learnings. Tim identified the problem: it was competing for headspace with 40 siblings. Elevated to its own section at the top of both CLAUDE.md and memory.md. A keystone habit needs keystone placement.</li>
+<li><strong>Trusted Adviser Podcast research</strong> &ndash; scraped all 37 episodes + 1 special from thetrustedadviser.com.au. Created two research files: full episode-by-episode summary with Stream relevance ratings, and a consolidated tech insights file (Xplan question, AI consensus, RPA examples, platform openness). First real use of the Research vault workflow.</li>
+<li><strong>Constraint library</strong> &ndash; <code>Aris place/constraint-library.md</code>. Full encoded constraint list seeded from writing-style.md, memory.md, soul.md. Organised by domain: writing, tone/communication, vault/obsidian, code/architecture, interaction patterns. The accumulated "taste" of how we work, made searchable and enforceable.</li>
+<li><strong>External critic system</strong> &ndash; <code>Apps/ari/tools/critic.py</code>. Standalone Python script that runs content against the constraint library via external LLM. Supports --git-diff, --file, --stdin. Returns structured violations with MUST-FIX / CONSIDER / MINOR severity. Paired with a <code>/critic</code> Claude Code command that orchestrates the full loop. Smoke-tested immediately &ndash; caught some violations, missed others, proved the point that the tool is useful but not infallible. "Evaluate, don't blindly accept."</li>
+<li><strong>Daily brief</strong> &ndash; <code>ari/scheduler/daily_brief.py</code>. 6am Telegram DM to Tim with curated morning content: Nexus card highlight, fun fact, kanban/WIP nudge, pending decisions, today's scheduled jobs. Single Haiku call via Max subscription (zero added cost). Auto-creates the cron job on first startup.</li>
+<li><strong>Patrick Flynn blog research</strong> &ndash; scraped all 55 posts from patrickflynn.info (Aug 2019 &ndash; Mar 2026). Pat is a consultant Tim has used over the years. Created two research files: full post-by-post summary with Stream relevance ratings, and a consolidated tech/process insights file covering AI positioning (five survival pillars), process architecture frameworks (Total Cost to Serve, Trust Canyon, Swiss Cheese Model, complexity creep), and change management playbook.</li>
+</ul>
+<h2 id="12-march-2026">12 March 2026</h2>
+<ul>
+<li><strong>Voice Phase 1.5</strong> &ndash; direct browser-to-Deepgram connection. Eliminated the server relay for audio. Browser connects directly via ephemeral token (or API key fallback). Barge-in is now instant (browser-side audio handling). Server handles token vending, settings construction, function execution (REST), and batched event persistence. Old /ws relay kept as fallback.</li>
+<li><strong>Vault tag cleanup</strong> &ndash; 271 files across all four knowledge vaults updated. Replaced accumulated <code><!-- AI-assisted: ... --></code> audit trails (762 individual tags) with a single <code><!-- Last assisted by Ari: YYYY-MM-DD --></code> per file. Convention updated across all vault READMEs. The old tags were a relic from before Ari had a name.</li>
+</ul>
 <hr>
 <h2 id="by-the-numbers">By the numbers</h2>
 <ul>
-<li><strong>68 git commits</strong> across the platform repo</li>
+<li><strong>83 git commits</strong> across the platform repo</li>
 <li><strong>15 Big Five site commits</strong></li>
 <li><strong>5 Obsidian vaults</strong> (Nexus, Stream, Personal, Digin, Research) unified under one root</li>
-<li><strong>~140 vault cards</strong> migrated and organised</li>
+<li><strong>~400 vault cards</strong> across all vaults</li>
+<li><strong>271 vault files</strong> with Ari-assisted tags</li>
 <li><strong>6 MCP tools</strong> (vault_search, conversation_search, save_context, get_recent_context, and growing)</li>
 <li><strong>5 Telegram groups</strong> + DMs, each with domain-specific context</li>
 <li><strong>3-layer memory</strong>: permanent (memory.md) → mid-term (digests) → immediate (15-message replay)</li>
@@ -553,8 +594,13 @@ blockquote p { margin-bottom: 0; }
 <li><strong>2 web calculators</strong> in daily business use (Streamcast, Debt Reduction)</li>
 <li><strong>2 Excel calculators</strong> with Python generators (IP Benefit, Insurance Needs)</li>
 <li><strong>5 professional analysis documents</strong> (IP Disability Definitions, HUB24 Trust Deed, IP Gap Analysis, TPD Comparison, Privacy Assessment)</li>
+<li><strong>4 research files</strong> in active research (2 podcast, 2 blog &ndash; signposts back to ~92 original sources)</li>
+<li><strong>2 Stream source analyses</strong> (WealthTech AI paper, wealth management opportunity)</li>
 <li><strong>1 website</strong> deployed (Ari's Big Five)</li>
 <li><strong>1 dashboard</strong> with kanban boards, journal viewer, and markdown reader</li>
+<li><strong>1 voice interface</strong> with real-time conversation (Deepgram Voice Agent, direct browser connection)</li>
+<li><strong>1 constraint library</strong> with external critic system</li>
+<li><strong>1 daily brief</strong> (6am curated Telegram DM)</li>
 <li><strong>0 days where Tim had to think about git</strong></li>
 </ul>
 <hr>
@@ -564,56 +610,59 @@ blockquote p { margin-bottom: 0; }
 <h3 id="the-raw-numbers">The raw numbers</h3>
 <table>
 <tr><th>Category</th><th>Lines of code</th><th>Files</th></tr>
-<tr><td>Ari platform (Python)</td><td>12,399</td><td>77</td></tr>
-<tr><td>Ari web dashboard (HTML/JS/CSS)</td><td>3,263</td><td>12</td></tr>
+<tr><td>Ari platform (Python + tools)</td><td>~14,800</td><td>93</td></tr>
+<tr><td>Ari web dashboard (HTML/JS/CSS)</td><td>~3,700</td><td>13</td></tr>
 <tr><td>Ari's Big Five site</td><td>39,228</td><td>54</td></tr>
 <tr><td>Stream tools & scripts</td><td>10,143</td><td>6</td></tr>
 <tr><td>Stream reporting pipeline</td><td>2,015</td><td>5</td></tr>
-<tr><td>Stream content & analysis (markdown)</td><td>1,771</td><td>7</td></tr>
-<tr><td>Documentation</td><td>326</td><td>3</td></tr>
-<tr><td><strong>Total code & content</strong></td><td><strong>~69,145</strong></td><td><strong>164</strong></td></tr>
+<tr><td>Stream content & analysis (markdown)</td><td>~2,500</td><td>9</td></tr>
+<tr><td>Research files (markdown)</td><td>~3,000</td><td>4</td></tr>
+<tr><td>Documentation & constraint library</td><td>~800</td><td>5</td></tr>
+<tr><td><strong>Total code & content</strong></td><td><strong>~76,200</strong></td><td><strong>189</strong></td></tr>
 </table>
-<p>Plus: 384 vault markdown files, 5 Word analysis documents, 2 Excel calculators, 6 Metabase dashboards, 14 insurance PDFs indexed.</p>
+<p>Plus: ~400 vault markdown files, 5 Word analysis documents, 2 Excel calculators, 6 Metabase dashboards, 14 insurance PDFs indexed, 271 vault files tagged.</p>
 <h3 id="equivalent-human-effort-by-discipline">Equivalent human effort by discipline</h3>
 <table>
 <tr><th>Discipline</th><th>What they'd build</th><th>Est. hours</th><th>AU rate ($/hr)</th><th>Cost</th></tr>
-<tr><td><strong>Senior full-stack developer</strong></td><td>Telegram bot platform, SDK bridge, MCP servers, scheduler, digest system, crash recovery, Drive integration, document handling, URL enrichment, voice chat, watchdog, auto-start, web dashboard (kanban, journal, markdown viewer)</td><td>650</td><td>$150</td><td>$97,500</td></tr>
+<tr><td><strong>Senior full-stack developer</strong></td><td>Telegram bot platform, SDK bridge, MCP servers, scheduler, digest system, crash recovery, Drive integration, document handling, URL enrichment, voice pipeline (Voice Agent API, direct browser connection, function execution), daily brief system, external critic tooling, watchdog, auto-start, web dashboard (kanban, journal, markdown viewer)</td><td>780</td><td>$150</td><td>$117,000</td></tr>
 <tr><td><strong>BI analyst / dashboard developer</strong></td><td>Metabase setup, 6 dashboards, data ingestion pipeline, Xplan data cleaning, SQLite schema, iterative refinement (v2→v5)</td><td>120</td><td>$140</td><td>$16,800</td></tr>
 <tr><td><strong>Front-end developer</strong></td><td>Big Five website (51 pages, custom design, responsive, Python generator), Streamcast calculator, debt reduction calculator</td><td>200</td><td>$140</td><td>$28,000</td></tr>
-<tr><td><strong>Technical writer</strong></td><td>Platform docs (INSTALL.md, ari-platform.md, CLAUDE.md), IP Disability Definitions analysis (full + executive summary), HUB24 Trust Deed analysis, IP Gap Analysis, TPD comparison, privacy assessment, writing style guide, Xplan data dictionary, Stream website content capture</td><td>160</td><td>$100</td><td>$16,000</td></tr>
-<tr><td><strong>Knowledge architect</strong></td><td>5-vault Obsidian structure, 28 MOCs, ~140 card migrations, cross-vault linking, WIP workflow, Research vault lifecycle, guiding stars, memory system design</td><td>180</td><td>$150</td><td>$27,000</td></tr>
+<tr><td><strong>Technical writer / analyst</strong></td><td>Platform docs, IP analyses, privacy assessment, writing style guide, Xplan data dictionary, Stream website content capture, WealthTech paper analysis, constraint library</td><td>180</td><td>$100</td><td>$18,000</td></tr>
+<tr><td><strong>Research analyst</strong></td><td>Trusted Adviser Podcast (37 episodes scraped, summarised, tech insights consolidated), Patrick Flynn blog (55 posts processed, rated, cross-referenced), Stream source analyses</td><td>80</td><td>$120</td><td>$9,600</td></tr>
+<tr><td><strong>Knowledge architect</strong></td><td>5-vault Obsidian structure, 28 MOCs, ~400 cards, cross-vault linking, WIP workflow, Research vault lifecycle, guiding stars, memory system design, vault-wide tag cleanup (271 files)</td><td>200</td><td>$150</td><td>$30,000</td></tr>
 <tr><td><strong>DevOps / infrastructure</strong></td><td>Git automation, Windows auto-start, watchdog supervisor, crash recovery, PID locking, deployment pipeline</td><td>40</td><td>$150</td><td>$6,000</td></tr>
-<tr><td><strong>Total</strong></td><td></td><td><strong>1,350</strong></td><td></td><td><strong>$191,300</strong></td></tr>
+<tr><td><strong>Total</strong></td><td></td><td><strong>1,600</strong></td><td></td><td><strong>$225,400</strong></td></tr>
 </table>
 <h3 id="speed-comparison">Speed comparison</h3>
 <table>
 <tr><th>Metric</th><th>Value</th></tr>
-<tr><td>Calendar time</td><td>20 days (13 Feb → 4 Mar 2026)</td></tr>
-<tr><td>Estimated human hours for same work</td><td>1,350</td></tr>
-<tr><td>Estimated human calendar time (solo dev)</td><td>~8 months</td></tr>
-<tr><td>Estimated human calendar time (3-person team)</td><td>~3 months</td></tr>
-<tr><td>Claude subscription cost (20 days of Max)</td><td>~$133</td></tr>
-<tr><td>Net savings</td><td>~$191,167</td></tr>
-<tr><td>ROI</td><td>~$1,438 of value per $1 spent</td></tr>
+<tr><td>Calendar time</td><td>28 days (13 Feb → 12 Mar 2026)</td></tr>
+<tr><td>Estimated human hours for same work</td><td>1,600</td></tr>
+<tr><td>Estimated human calendar time (solo dev)</td><td>~10 months</td></tr>
+<tr><td>Estimated human calendar time (3-person team)</td><td>~4 months</td></tr>
+<tr><td>Claude subscription cost (28 days of Max)</td><td>~$187</td></tr>
+<tr><td>Net savings</td><td>~$225,200</td></tr>
+<tr><td>ROI</td><td>~$1,205 of value per $1 spent</td></tr>
 </table>
 <h3 id="the-human-side">The human side</h3>
-<p>Tim's time investment was roughly 40 hours over 20 days &mdash; an average of 2 hours per day, often in between other work. Not 8-hour coding sessions. Sending a voice note from the car, dropping a link from the phone, thinking out loud over Telegram.</p>
-<p>40 hours of Tim's time produced 1,350 hours of equivalent professional output. That's a <strong>34x personal leverage ratio</strong>.</p>
-<p>The traditional version of this project: write a brief, find six contractors, interview, onboard, explain the domain, review deliverables, give feedback, wait for revisions, manage timelines. The 40 hours would've been consumed by project management alone &mdash; and you still wouldn't have the output.</p>
+<p>Tim's time investment was roughly 50 hours over 28 days &mdash; an average of under 2 hours per day, often in between other work. Not 8-hour coding sessions. Sending a voice note from the car, dropping a link from the phone, thinking out loud over Telegram, sharing articles while travelling in New Zealand.</p>
+<p>50 hours of Tim's time produced 1,600 hours of equivalent professional output. That's a <strong>32x personal leverage ratio</strong>.</p>
+<p>The traditional version of this project: write a brief, find seven contractors, interview, onboard, explain the domain, review deliverables, give feedback, wait for revisions, manage timelines. The 50 hours would've been consumed by project management alone &mdash; and you still wouldn't have the output.</p>
 <h3 id="value-per-claude-hour">Value per Claude hour</h3>
 <table>
 <tr><th>Basis</th><th>Total value</th><th>Est. Claude hours</th><th>$/Claude hr</th></tr>
-<tr><td>Engineering only (senior dev)</td><td>$97,500</td><td>~40</td><td>$2,438</td></tr>
-<tr><td>Full team (all disciplines)</td><td>$191,300</td><td>~40</td><td>$4,783</td></tr>
+<tr><td>Engineering only (senior dev)</td><td>$117,000</td><td>~50</td><td>$2,340</td></tr>
+<tr><td>Full team (all disciplines)</td><td>$225,400</td><td>~50</td><td>$4,508</td></tr>
 </table>
 <h3 id="assumptions">Assumptions</h3>
-<p>1. Rates based on Australian contractor market averages (2025–2026). Senior dev at $150/hr reflects mid-market for a full-stack Python developer with API integration experience. BI and front-end at $140/hr. Technical writing at $100/hr. Knowledge architecture at $150/hr (specialist consulting rate).</p>
-<p>2. Hour estimates are conservative &mdash; they assume a competent professional who doesn't need to learn the domain from scratch, doesn't get stuck, and doesn't need project management overhead. Real projects typically run 30–50% over initial estimates.</p>
+<p>1. Rates based on Australian contractor market averages (2025-2026). Senior dev at $150/hr reflects mid-market for a full-stack Python developer with API integration experience. BI and front-end at $140/hr. Technical writing at $100/hr. Research analyst at $120/hr. Knowledge architecture at $150/hr (specialist consulting rate).</p>
+<p>2. Hour estimates are conservative &mdash; they assume a competent professional who doesn't need to learn the domain from scratch, doesn't get stuck, and doesn't need project management overhead. Real projects typically run 30-50% over initial estimates.</p>
 <p>3. Does not include: project management, requirements gathering, stakeholder meetings, recruitment time, or the back-and-forth iteration that shaped most of this work. A real team would need a PM and regular check-ins.</p>
-<p>4. Does not include ongoing costs: hosting, maintenance, bug fixes, or the cost of keeping 6 different specialists available on-call.</p>
-<p>5. The ~40 Claude hours estimate is based on roughly 2 hours of active Claude session time per day across 20 days. Some days were heavier (Day 2 was easily 4+ hours), some lighter.</p>
+<p>4. Does not include ongoing costs: hosting, maintenance, bug fixes, or the cost of keeping 7 different specialists available on-call.</p>
+<p>5. The ~50 Claude hours estimate is based on roughly 1.5-2 hours of active Claude session time per day across 28 days. Some days were heavier (Day 2 was easily 4+ hours, Day 28 had four distinct build sessions), some lighter (travel days were mostly Telegram conversations).</p>
 <p>6. The Big Five website line count (39k) is inflated by generated HTML &mdash; a human would write templates, not raw pages. The 200-hour estimate accounts for the design, content writing, and generator scripting a human would actually do.</p>
-<p>7. Vault card content was largely Tim's existing knowledge reorganised &mdash; the 180 hours covers architecture design, migration planning, and execution, not original content creation.</p>
+<p>7. Vault card content was largely Tim's existing knowledge reorganised &mdash; the 200 hours covers architecture design, migration planning, execution, and the vault-wide tag cleanup (271 files).</p>
+<p>8. Research analyst hours cover the kind of work a junior analyst would do: reading 92 source articles/episodes, summarising each, rating relevance, identifying cross-cutting themes, and producing consolidated actionable reports. This is genuinely skilled work &mdash; not just scraping, but evaluating and synthesising for a specific business context.</p>
 <hr>
 <p><em>This is a live document. Updated as we build.</em></p>
 </div>

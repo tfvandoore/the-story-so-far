@@ -537,8 +537,45 @@ def build_toc_html(toc):
     return '\n'.join(items)
 
 
+def extract_hero_stats(md_content):
+    """Extract hero stats dynamically from the markdown content."""
+    stats = {
+        'days': '28',
+        'lines': '76k',
+        'value': '$225k',
+        'leverage': '32x',
+    }
+
+    # Calendar time from speed comparison table: "| Calendar time | XX days ..."
+    m = re.search(r'Calendar time\s*\|\s*(\d+)\s*days', md_content)
+    if m:
+        stats['days'] = m.group(1)
+
+    # Total lines from raw numbers table: "| **Total code & content** | **~76,200** |"
+    m = re.search(r'Total code & content\*\*\s*\|\s*\*\*~?([\d,]+)\*\*', md_content)
+    if m:
+        num = int(m.group(1).replace(',', ''))
+        stats['lines'] = f'{num // 1000}k'
+
+    # Total cost from equivalent human effort table: "| **Total** | | **1,600** | | **$225,400** |"
+    m = re.search(r'Total\*\*\s*\|[^|]*\|\s*\*\*[\d,]+\*\*\s*\|[^|]*\|\s*\*\*\$([\d,]+)\*\*', md_content)
+    if m:
+        num = int(m.group(1).replace(',', ''))
+        stats['value'] = f'${num // 1000}k'
+
+    # Leverage ratio from human side paragraph: "That's a **32x personal leverage ratio**"
+    m = re.search(r'\*\*(\d+)x personal leverage ratio\*\*', md_content)
+    if m:
+        stats['leverage'] = f'{m.group(1)}x'
+
+    return stats
+
+
 def build_page(md_content):
     """Build the full HTML page from markdown content."""
+
+    # Extract hero stats from the markdown itself
+    hero = extract_hero_stats(md_content)
 
     # Strip the H1 title and subtitle - we'll put them in the hero
     lines = md_content.split('\n')
@@ -562,13 +599,19 @@ def build_page(md_content):
     toc = extract_toc(body_md)
     toc_html = build_toc_html(toc)
 
+    meta_desc = (
+        f"A running log of everything Tim and Ari have built together. "
+        f"Started as a Telegram bot, became something more. "
+        f"{hero['days']} days, {hero['value']} equivalent, {hero['lines']} lines of code."
+    )
+
     page = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Story So Far &mdash; Tim &amp; Ari</title>
-    <meta name="description" content="A running log of everything Tim and Ari have built together. Started as a Telegram bot, became something more. 20 days, $191k equivalent, 69,000 lines of code.">
+    <meta name="description" content="{meta_desc}">
     <style>{CSS}</style>
 </head>
 <body>
@@ -587,19 +630,19 @@ def build_page(md_content):
     <p class="subtitle">A running log of everything Tim and Ari have built together.<br>Started as a Telegram bot, became something more.</p>
     <div class="hero-stats">
         <div class="stat">
-            <span class="stat-value">20</span>
+            <span class="stat-value">{hero['days']}</span>
             <span class="stat-label">Days</span>
         </div>
         <div class="stat">
-            <span class="stat-value">69k</span>
+            <span class="stat-value">{hero['lines']}</span>
             <span class="stat-label">Lines of code</span>
         </div>
         <div class="stat">
-            <span class="stat-value">$191k</span>
+            <span class="stat-value">{hero['value']}</span>
             <span class="stat-label">Equivalent value</span>
         </div>
         <div class="stat">
-            <span class="stat-value">34x</span>
+            <span class="stat-value">{hero['leverage']}</span>
             <span class="stat-label">Leverage ratio</span>
         </div>
     </div>
