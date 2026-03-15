@@ -349,6 +349,9 @@ blockquote p { margin-bottom: 0; }
 <li><a href="#7-10-march-2026">7-10 March 2026</a></li>
 <li><a href="#11-march-2026">11 March 2026</a></li>
 <li><a href="#12-march-2026">12 March 2026</a></li>
+<li><a href="#13-march-2026">13 March 2026</a></li>
+<li><a href="#14-march-2026">14 March 2026</a></li>
+<li><a href="#15-march-2026">15 March 2026</a></li>
 <li><a href="#by-the-numbers">By the numbers</a></li>
 <li><a href="#what-would-this-have-cost">What would this have cost?</a></li>
 <li><a href="#the-raw-numbers" class="toc-sub">The raw numbers</a></li>
@@ -578,6 +581,31 @@ blockquote p { margin-bottom: 0; }
 <ul>
 <li><strong>Voice Phase 1.5</strong> &ndash; direct browser-to-Deepgram connection. Eliminated the server relay for audio. Browser connects directly via ephemeral token (or API key fallback). Barge-in is now instant (browser-side audio handling). Server handles token vending, settings construction, function execution (REST), and batched event persistence. Old /ws relay kept as fallback.</li>
 <li><strong>Vault tag cleanup</strong> &ndash; 271 files across all four knowledge vaults updated. Replaced accumulated <code><!-- AI-assisted: ... --></code> audit trails (762 individual tags) with a single <code><!-- Last assisted by Ari: YYYY-MM-DD --></code> per file. Convention updated across all vault READMEs. The old tags were a relic from before Ari had a name.</li>
+</ul>
+<h2 id="13-march-2026">13 March 2026</h2>
+<p><strong>Image handling and the Rubica research project.</strong></p>
+<ul>
+<li><strong>Photo sending via Telegram</strong> &ndash; <code>send_telegram.py</code> upgraded to handle image files. Can now send photos to channels and DMs programmatically. Used for daily brief test messages.</li>
+<li><strong>Rubica/Xplan research dive</strong> &ndash; deep investigative session on Australian fintech alternatives. Tim's initial framing ("Rubica could replace Xplan") evolved through research to a more precise model: "Xplan's dominance is about configured instances licensees control, not just feature parity." Tracked down pricing intel ($50k+ AUD annually for status quo), pulled consultant transcripts, connected product team dots. First use of the research workflow for a live business decision rather than historical cataloguing.</li>
+</ul>
+<h2 id="14-march-2026">14 March 2026</h2>
+<p><strong>Stream reporting analytics &ndash; pipeline measurement.</strong></p>
+<ul>
+<li><strong>Pipeline date anomaly investigation</strong> &ndash; discovered missing milestone dates in raw Xplan exports are genuine data gaps (87 opps with meeting but no contact, 71 with visualise but no engagement). Not formula errors, just unrecorded process steps.</li>
+<li><strong>Lock-up days decoded</strong> &ndash; Excel "lock-up" columns measure business days (weekdays only) between milestones, not calendar days from opp creation. Added 12 lock-up columns to opportunities schema (capped at 3,650 days to catch broken formulas). SoA Presented lock-up column excluded (broken Excel formula).</li>
+<li><strong>Analytics pipeline</strong> &ndash; <code>Stream/reporting/analytics.py</code> created with data quality flags, lock-up reference view, journey duration calculations. Auto-runs after daily ingest. Process catalogue updated with data quality notes.</li>
+<li><strong>Metabase Dashboard 7 (Client Journey)</strong> &ndash; 9 cards covering conversion funnel, per-adviser funnel, active pipeline by stage, average days between stages, total duration by adviser, intro meeting analysis, data quality flags, client-level journey detail. 59 cards across 7 dashboards total.</li>
+<li><strong>Cohort journey tracking</strong> &ndash; built from task completion history instead of pipeline dates. Thread names (v1.0, v2.0) separate upfront from review processes. Eliminates review contamination and pre-existing client inflation in funnel counts.</li>
+</ul>
+<h2 id="15-march-2026">15 March 2026</h2>
+<p><strong>Analytics refinements &ndash; duration measurement hardening.</strong></p>
+<ul>
+<li><strong>Implementation duration fix</strong> &ndash; changed from MAX to MIN for implementation task dates. MAX was picking up re-implementation from review cycles years later (e.g., Feb 2023 original inflated by Mar 2026 review task). ATP→Done dropped from avg 200d to median 63d.</li>
+<li><strong>Negative duration handling</strong> &ndash; 14 entities had qualify_date after discover_date (retroactive entries). Capped qualify_date at discover_date, floored all duration calculations at zero.</li>
+<li><strong>Test record exclusion</strong> &ndash; added filters for client_name LIKE '%test%' and client_adviser LIKE '%enzumo%'. Catches 28 test records including "Test Simpson, Homie".</li>
+<li><strong>Median/percentile stats</strong> &ndash; replaced mean with median/P10/P90/trimmed mean across all duration calculations. Outliers (e.g., 1,030-day re-engagement gap) were skewing averages. SQLite lacks percentile functions, so stats computed in Python and stored in tables.</li>
+<li><strong>Data Collection milestone added</strong> &ndash; task 1.4 (Hold DC meeting) sits between Discover and Visualise. First tracked Oct 2023, consistent from Q1 2025. Treated as supplementary, not a gate in main funnel chain.</li>
+<li><strong>Review journey tracking</strong> &ndash; meeting-anchored review cycle measurement. 712 review cycles across 217 clients, 200 included advice. Typical total cycle: 63 days median. Separate duration stats table for review transitions.</li>
 </ul>
 <hr>
 <h2 id="by-the-numbers">By the numbers</h2>
