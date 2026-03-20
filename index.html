@@ -352,6 +352,10 @@ blockquote p { margin-bottom: 0; }
 <li><a href="#13-march-2026">13 March 2026</a></li>
 <li><a href="#14-march-2026">14 March 2026</a></li>
 <li><a href="#15-march-2026">15 March 2026</a></li>
+<li><a href="#16-march-2026">16 March 2026</a></li>
+<li><a href="#17-march-2026">17 March 2026</a></li>
+<li><a href="#18-march-2026">18 March 2026</a></li>
+<li><a href="#19-march-2026">19 March 2026</a></li>
 <li><a href="#by-the-numbers">By the numbers</a></li>
 <li><a href="#what-would-this-have-cost">What would this have cost?</a></li>
 <li><a href="#the-raw-numbers" class="toc-sub">The raw numbers</a></li>
@@ -607,6 +611,48 @@ blockquote p { margin-bottom: 0; }
 <li><strong>Data Collection milestone added</strong> &ndash; task 1.4 (Hold DC meeting) sits between Discover and Visualise. First tracked Oct 2023, consistent from Q1 2025. Treated as supplementary, not a gate in main funnel chain.</li>
 <li><strong>Review journey tracking</strong> &ndash; meeting-anchored review cycle measurement. 712 review cycles across 217 clients, 200 included advice. Typical total cycle: 63 days median. Separate duration stats table for review transitions.</li>
 </ul>
+<h2 id="16-march-2026">16 March 2026</h2>
+<ul>
+<li><strong>Voice barge-in stabilisation</strong> &ndash; fixed direct browser-to-Deepgram connection handling. Echo cancellation conflicts (speaker vs headset), mute timer tied to response duration instead of actual audio, suppression logic stuck in bad states. Multiple test iterations revealed headset eliminated a whole class of audio feedback issues. Barge-in detection now reliable.</li>
+<li><strong>Image search capability</strong> &ndash; replaced dead Unsplash CDN with Wikimedia Commons API. Visual verification loop added (search → verify → retry on mismatch). Can now send photos via Telegram. Evie tested with puppy pictures.</li>
+<li><strong>Model switching</strong> &ndash; default Sonnet 4.6, auto-escalate to Opus for vault/code work. Dynamic switching based on task complexity.</li>
+<li><strong>Cron job expansion</strong> &ndash; added EOD maintenance, WIP review, CLI transcript digest, git commit digest. Automated oversight for things that were slipping through manual checks.</li>
+</ul>
+<h2 id="17-march-2026">17 March 2026</h2>
+<ul>
+<li><strong>Email ingestion extension</strong> &ndash; offshore staff inboxes added to reporting pipeline. Fixed scheduler crash from orphaned <code>eod_maintenance</code> job referencing deleted function.</li>
+<li><strong>Timezone/timestamp debugging</strong> &ndash; UTC log confusion led to incorrect timeline assertions. Spent time verifying actual event sequence using Bash and Read tools. Reminder: slow down and check work.</li>
+</ul>
+<h2 id="18-march-2026">18 March 2026</h2>
+<p><strong>Reporting pipeline expansion &ndash; GA4, Calendly, Xero attempts.</strong></p>
+<ul>
+<li><strong>Google Analytics (GA4) pipeline</strong> &ndash; <code>Stream/reporting/ga_ingest.py</code> pulls from GA4 Data API (property 358501028, 2 years history). Five tables: daily traffic, sources, pages, conversions, devices. Loaded 731 days. Direct traffic dominates (70%+), Google organic 5x paid sessions but paid converts better (5.4% vs 1.9%).</li>
+<li><strong>Calendly pipeline</strong> &ndash; <code>Stream/reporting/calendly_ingest.py</code> pulls API v2 events with UTM fields, adviser resolution, meeting type normalisation. 2,936 events over 2 years. 521 Discover + intro meetings. 20.7% cancellation rate. Zero UTM tracking (website not passing UTMs through booking links).</li>
+<li><strong>Metabase Dashboard 8 (Website Performance)</strong> &ndash; 13 cards covering KPI scalars, traffic trends, paid vs organic, sources, devices, conversions, engagement, top pages, high-bounce pages. Dashboard 1 header updated with drop-down menu for all 8 dashboards.</li>
+<li><strong>FY2026 revenue projection</strong> &ndash; mapped Discover meetings through pipeline with timing delays to show when revenue arrives. Q1 2026 strongest quarter on record (17/month avg).</li>
+<li><strong>Xero integration blocked</strong> &ndash; OAuth2 works for basic scopes but accounting.transactions.read requires custom connection subscription ($10/month purchased from within Xero UI). Tim couldn't locate subscription mechanism. Parked.</li>
+<li><strong>SQLite WAL mode</strong> enabled on <code>stream.db</code> for concurrent Metabase + ingestion script access.</li>
+<li><strong>Rubica meeting update</strong> &ndash; Tim met with Aaron Breed. They were impressed with Stream's AI tooling. Gave Tim blank Salesforce/Rubica instance to explore. Relationship warm, door open.</li>
+<li><strong>Workato research</strong> &ndash; 18-section research file covering platform overview, recipe language (Ruby-based), connector SDK, API platform, integrations, security, pricing. <strong>Critical finding: Workato has native IRESS Xplan connector with full CRUD operations.</strong> This changes CRM migration picture &ndash; Xplan-to-Salesforce sync can be orchestrated via Workato recipes without custom code.</li>
+<li><strong>MCP reliability fixes</strong> &ndash; vault-search server kept dropping from CLI sessions. Config issues and server crashes. Added Perplexity MCP with <code>cmd /c</code> wrapper for Windows.</li>
+</ul>
+<h2 id="19-march-2026">19 March 2026</h2>
+<p><strong>Platform stability overhaul &ndash; the biggest infrastructure day since voice went direct.</strong></p>
+<ul>
+<li><strong>Stale PID file fix</strong> &ndash; recurring issue blocking platform restarts finally resolved. Force-killed Python processes don't run cleanup, PID file persists. Watchdog now always cleans PID file after child exits. instance_lock.py two-layer alive check (Windows API + tasklist fallback) catches zombie handles.</li>
+<li><strong>Database thread safety</strong> &ndash; VaultDB per-call connections with threading.Lock. SQLite WAL mode across all databases.</li>
+<li><strong>API key race condition</strong> &ndash; asyncio.Lock context manager added across 9 files.</li>
+<li><strong>Voice pipeline refinements</strong> &ndash; barge-in fix, mic isolation, TTS speed, hysteresis timer.</li>
+<li><strong>Signal handlers</strong> &ndash; SIGBREAK/SIGINT for graceful shutdown. shutdown.bat for pre-restart cleanup. Logs flush on shutdown.</li>
+<li><strong>Watchdog resilience</strong> &ndash; <code>ping</code> instead of <code>timeout</code>, crash counter, no more taskkill.</li>
+<li><strong>Network resilience</strong> &ndash; platform waits for internet connection instead of crash-looping on startup.</li>
+<li><strong>MCP vault search optimisation</strong> &ndash; numpy vectorisation, client pooling, timeouts. Significant speed improvement.</li>
+<li><strong>Portability improvements</strong> &ndash; MCP config generated at startup from ARI_ROOT (no hardcoded paths). CLI digest derives paths from ARI_ROOT. Created install.bat for venv creation, deps install, .env setup, MCP config generation. Updated .env.example with all 15 environment variables.</li>
+<li><strong>Platform documentation</strong> &ndash; ari-platform.md updated with scheduler cron jobs table (all 7 jobs), fixed voice model references, added missing files/sections, corrected env vars.</li>
+<li><strong>Cron job additions</strong> &ndash; weekly platform sanity check (Sunday 8am), kanban review (replaces manual checks).</li>
+<li><strong>Critic integration</strong> &ndash; caught broad exception swallow in PID fix, fixed immediately.</li>
+</ul>
+<p>23 files changed, 568 insertions. Platform restart successful, all stability fixes active.</p>
 <hr>
 <h2 id="by-the-numbers">By the numbers</h2>
 <ul>
