@@ -356,6 +356,12 @@ blockquote p { margin-bottom: 0; }
 <li><a href="#17-march-2026">17 March 2026</a></li>
 <li><a href="#18-march-2026">18 March 2026</a></li>
 <li><a href="#19-march-2026">19 March 2026</a></li>
+<li><a href="#20-march-2026">20 March 2026</a></li>
+<li><a href="#22-march-2026">22 March 2026</a></li>
+<li><a href="#23-march-2026">23 March 2026</a></li>
+<li><a href="#24-march-2026">24 March 2026</a></li>
+<li><a href="#28-march-2026">28 March 2026</a></li>
+<li><a href="#29-march-2026">29 March 2026</a></li>
 <li><a href="#by-the-numbers">By the numbers</a></li>
 <li><a href="#what-would-this-have-cost">What would this have cost?</a></li>
 <li><a href="#the-raw-numbers" class="toc-sub">The raw numbers</a></li>
@@ -653,6 +659,53 @@ blockquote p { margin-bottom: 0; }
 <li><strong>Critic integration</strong> &ndash; caught broad exception swallow in PID fix, fixed immediately.</li>
 </ul>
 <p>23 files changed, 568 insertions. Platform restart successful, all stability fixes active.</p>
+<h2 id="20-march-2026">20 March 2026</h2>
+<p><strong>MCP config portability and shutdown policy.</strong></p>
+<ul>
+<li><strong>MCP config git exclusion</strong> &ndash; <code>mcp_config.json</code> removed from git tracking, added to <code>.gitignore</code>. File is now generated at startup from <code>ARI_ROOT</code> environment variable (no hardcoded paths). Matches existing portability pattern from 19 March improvements.</li>
+<li><strong>MCP shutdown policy</strong> &ndash; created <code>setup_mcp_shutdown_policy.bat</code> to configure Windows shutdown scripts. Ensures MCP servers terminate cleanly before system shutdown (prevents hanging processes and port locks on restart). Added <code>run_mcp.bat</code> launcher script with explicit vault server configuration.</li>
+</ul>
+<h2 id="22-march-2026">22 March 2026</h2>
+<p><strong>Infrastructure design, Stream context reorganisation, and first skills.</strong></p>
+<ul>
+<li><strong>Stream context file split</strong> &ndash; replaced monolithic <code>Stream/context.md</code> (358 lines) with 9 business function context files: <code>insurance/</code>, <code>reporting/</code>, <code>clients/</code>, <code>finance/</code>, <code>strategy/</code>, <code>operations/</code>, <code>marketing/</code>, <code>compliance/</code>, <code>hr/</code>. Each file targeted to board meeting perspectives (Financial, Strategic, Operational, Client/Market). Main context.md slimmed to signpost/index with progressive disclosure model. Investment context file added covering CAREphilosophy, HUB24 platform, DCA/DAA policies, provider criteria.</li>
+<li><strong>Stream context enrichment</strong> &ndash; all 8 original context files updated from Tim's voice note feedback. Removed personal medical info, added leadership philosophy (smart + trying + good to be around), updated team structure, reframed compliance from privacy to legislative obligations, added licensee policy references (53 PDFs). Resolved open threads (TPD partial disability analysis, Ascender ranking).</li>
+<li><strong>Memory.md split</strong> &ndash; progressive disclosure applied to core memory. Split into 3 files: <code>memory.md</code> (100 lines core), <code>memory-technical.md</code> (73 lines platform details), <code>memory-decisions.md</code> (29 lines architectural choices). CLAUDE.md slimmed from 113 to 87 lines with on-demand context loading table.</li>
+<li><strong>Six skills created</strong> &ndash; vault-recall (search digests first, not raw vault), code-review (critic workflow guidance), planning (vision-first Socratic process), vault-card (bidirectional linking enforcement), stream-content (auto-load style guide + brand voice), concept-card (reflect back before writing). All stored in <code>.claude/skills/</code> with SKILL.md convention.</li>
+<li><strong>Two hooks created</strong> &ndash; <code>post-push-critic.sh</code> (mandatory critic for code pushes, skip docs-only), <code>pre-compact-save.sh</code> (remind to save_context before auto-compaction). Stored in <code>.claude/hooks/</code>.</li>
+<li><strong>REVIEW.md created</strong> &ndash; critic guidance file at project root. What to flag, what to skip, domain-specific rules for platform code vs content files.</li>
+<li><strong>API index created</strong> &ndash; <code>Aris place/api-index.md</code> curated public API reference for future projects. Finance APIs prioritised (Alpha Vantage, Twelve Data, ASX historical).</li>
+<li><strong>CLAUDE.md management plugin</strong> &ndash; installed <code>claude-md-management@claude-plugins-official</code>. Commands: <code>/claude-md-improver</code> (audit quality), <code>/revise-claude-md</code> (capture session learnings).</li>
+<li><strong>Stream kanban board</strong> &ndash; <code>/stream-kanban</code> route added to dashboard. Separate board from Ari's kanban, 48-hour review cycle, working-on widget integration. 14 cards covering competitive analysis, HR documentation, compliance framework research, investment template updates.</li>
+</ul>
+<h2 id="23-march-2026">23 March 2026</h2>
+<p><strong>stream_query tool &ndash; database interrogation for Pulse and CLI.</strong></p>
+<ul>
+<li><strong>stream_query tool created</strong> &ndash; natural language database interrogation for <code>stream.db</code> and <code>email.db</code>. Multi-database support, conversation context for follow-up questions, domain gating (Telegram = both DBs, CLI = stream.db only). Integrated into Pulse channel and CLI SDK bridge config. Auto-injects reporting insights context for analytics queries. Error sanitisation in logs (no exposed schema details). Executor health checks with narrow exception handling per critic feedback.</li>
+<li><strong>Critic refinements</strong> &ndash; per-session state isolation (no cross-contamination), improved error logging, log sanitisation removing internal structure hints.</li>
+</ul>
+<h2 id="24-march-2026">24 March 2026</h2>
+<p><strong>Perplexity MCP integration and network resilience.</strong></p>
+<ul>
+<li><strong>Perplexity MCP added</strong> &ndash; integrated into SDK bridge config for Telegram and CLI. Tool status messages added (searching/found X results) so user knows when long-running web searches are active. Fixed hanging on quota exhaustion.</li>
+<li><strong>Telegram timeout increase</strong> &ndash; bot timeouts raised from 60s to 120s to accommodate MCP tool calls (particularly Perplexity and stream_query).</li>
+<li><strong>Network error handling</strong> &ndash; Telegram bot now catches network exceptions gracefully during long-running operations. Platform health check added to startup sequence.</li>
+<li><strong>Pulse channel formatting</strong> &ndash; improved status message layout for multi-tool operations.</li>
+</ul>
+<h2 id="28-march-2026">28 March 2026</h2>
+<p><strong>Watchdog overhaul &ndash; PID-based dual-instance prevention.</strong></p>
+<ul>
+<li><strong>Dual-instance prevention hardened</strong> &ndash; watchdog now uses PID-based locking instead of filesystem lock files. Checks both PID file existence and process liveness (Windows API + tasklist fallback). Eliminates race condition where stale PID files blocked legitimate restarts. Graceful restart path: new instance detects running instance, sends shutdown signal, waits for clean exit, then starts.</li>
+<li><strong>Platform health check cron</strong> &ndash; weekly sanity check added to scheduler (Sunday 8am). Monitors core services, API connectivity, database integrity.</li>
+</ul>
+<h2 id="29-march-2026">29 March 2026</h2>
+<p><strong>SDK bridge context overflow handling and critic acceptance contracts.</strong></p>
+<ul>
+<li><strong>Context overflow handling</strong> &ndash; SDK bridge now catches context limit errors gracefully during Telegram/CLI sessions. Returns user-friendly error instead of crash. Suggests conversation reset or context compaction.</li>
+<li><strong>Critic plan review mode</strong> &ndash; <code>critic.py</code> extended with <code>plan</code> mode for reviewing implementation plans before build. Uses new constraint file <code>Aris place/constraints/plan.md</code> (criteria for testable acceptance criteria, architectural coherence, scope clarity).</li>
+<li><strong>Acceptance contracts</strong> &ndash; planning skill extended with Phase 5.5 (contract generation). After plan approval, critic subagent produces testable acceptance criteria for each deliverable. Contracts saved to <code>Aris place/contracts/YYYY-MM-DD-{label}.md</code>. Code-review skill updated to pass <code>--contract</code> flag when contract exists for current build. Critic now does two passes: constraint violation check + contract compliance check.</li>
+<li><strong>MCP config git exclusion</strong> &ndash; <code>mcp_config.json</code> added to <code>.gitignore</code> (duplicate entry, consolidates earlier 20 March change).</li>
+</ul>
 <hr>
 <h2 id="by-the-numbers">By the numbers</h2>
 <ul>
